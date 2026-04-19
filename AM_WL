@@ -1,0 +1,126 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+# =========================
+# AM_W Lite (Low-End Devices)
+# =========================
+
+RED='\e[1;31m'
+GREEN='\e[1;32m'
+BLUE='\e[1;34m'
+YELLOW='\e[1;33m'
+CYAN='\e[1;36m'
+NC='\e[0m'
+
+LANG="AR"
+
+# ===== TEXT =====
+text() {
+if [ "$LANG" = "AR" ]; then
+case $1 in
+w) echo "👋 مرحباً بك في AM_W Lite" ;;
+m1) echo "🎮 تشغيل المحاكي (خفيف)" ;;
+m2) echo "⚡ تحسين الأداء" ;;
+m3) echo "♻️ تنظيف خفيف" ;;
+m4) echo "🔄 استرجاع الوضع" ;;
+m5) echo "🌐 اللغة" ;;
+m6) echo "❌ خروج" ;;
+esac
+else
+case $1 in
+w) echo "👋 Welcome to AM_W Lite" ;;
+m1) echo "🎮 Start Emulator (Light Mode)" ;;
+m2) echo "⚡ Boost Performance" ;;
+m3) echo "♻️ Light Clean" ;;
+m4) echo "🔄 Restore" ;;
+m5) echo "🌐 Language" ;;
+m6) echo "❌ Exit" ;;
+esac
+fi
+}
+
+# ===== SAFE BOOST =====
+boost() {
+echo -e "${YELLOW}⚡ Optimizing safely...${NC}"
+
+settings put global window_animation_scale 0.5
+settings put global transition_animation_scale 0.5
+settings put global animator_duration_scale 0.5
+
+cmd activity kill-all 2>/dev/null
+
+echo -e "${GREEN}✅ Done (Safe Mode)${NC}"
+}
+
+# ===== LIGHT CLEAN =====
+clean() {
+echo -e "${BLUE}♻️ Cleaning safely...${NC}"
+
+pm trim-caches 256M 2>/dev/null
+
+echo -e "${GREEN}✅ Cleaned${NC}"
+}
+
+# ===== LAUNCH =====
+launch() {
+boost
+sleep 1
+
+echo -e "${CYAN}🎮 Launching Emulator...${NC}"
+am start -n com.winlator/.MainActivity
+}
+
+# ===== RESTORE =====
+restore() {
+settings put global window_animation_scale 1
+settings put global transition_animation_scale 1
+settings put global animator_duration_scale 1
+
+echo -e "${GREEN}🔄 Restored${NC}"
+}
+
+# ===== LANGUAGE =====
+lang() {
+echo "1) عربي"
+echo "2) English"
+read -p ">> " l
+
+[ "$l" = "1" ] && LANG="AR" || LANG="EN"
+}
+
+# ===== LOOP =====
+while true; do
+clear
+
+echo -e "${RED}"
+echo " █████╗ ███╗   ███╗"
+echo "██╔══██╗████╗ ████║"
+echo "███████║██╔████╔██║"
+echo "██╔══██║██║╚██╔╝██║"
+echo "██║  ██║██║ ╚═╝ ██║"
+echo "╚═╝  ╚═╝╚═╝     ╚═╝"
+echo -e "${NC}"
+
+echo -e "${CYAN}$(text w)${NC}"
+echo "===================="
+echo "1) $(text m1)"
+echo "2) $(text m2)"
+echo "3) $(text m3)"
+echo "4) $(text m4)"
+echo "5) $(text m5)"
+echo "6) $(text m6)"
+echo "===================="
+
+read -p ">> " ch
+
+case $ch in
+1) launch ;;
+2) boost ;;
+3) clean ;;
+4) restore ;;
+5) lang ;;
+6) exit ;;
+*) echo "❌"; sleep 1 ;;
+esac
+
+sleep 2
+done
